@@ -19,13 +19,14 @@ $(".btn").on("click", function() {
   if (userClickedPattern.length === level) {
     checkAnswer(userChosenColor);
   }
-
 });
 
 //Check for keyboard key press to start game
 $(document).keydown(function() {
   if (!gameInProgress) {
     gameInProgress = true;
+    userClickedPattern.length = 0;
+    gamePattern.length = 0;
     nextSequence();
     $("#level-title").html("Level " + level);
   }
@@ -34,16 +35,26 @@ $(document).keydown(function() {
 
 // Check user input
 function checkAnswer(color) {
-
+  // Right answer
   if (gamePattern[level - 1] === color) {
-    alert("CORRECT COLOR");
-
     userClickedPattern.length = 0;
-    // gamePattern.length = 0;
+    //// TODO: pause time delay
+    setTimeout(function () {
+      nextSequence();
+    }, 1000);
 
-    nextSequence();
+  // Wrong answer
   } else {
-    alert("WRONG GAME OVER FOOL");
+    var wrongSound = new Audio("sounds/wrong.mp3");
+    wrongSound.play();
+
+    $("body").addClass("game-over");
+    setTimeout(function () {
+      $("body").removeClass("game-over");
+    }, 200);
+
+    $("h1").html("Game over, press any key to restart");
+
   }
 
 }
